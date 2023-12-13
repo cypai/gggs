@@ -19,6 +19,7 @@ def read_infile(file):
             if line == "":
                 break
             if line == "---":
+                already_paired.append("-")
                 continue
             already_paired.append(tuple(line.split(",")))
     return already_paired
@@ -26,9 +27,11 @@ def read_infile(file):
 def output(file, already_paired, selected, extra):
     with open(file, "w") as f:
         for pair in already_paired:
-            f.write(f"{pair[0]},{pair[1]}\n")
-            if pair[1] == "none":
+            if pair == "-":
                 f.write("---\n")
+            else:
+                f.write(f"{pair[0]},{pair[1]}\n")
+        f.write("---\n")
         for pair in selected:
             f.write(f"{pair[0]},{pair[1]}\n")
         for remaining in list(extra):
