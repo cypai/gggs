@@ -53,7 +53,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(dest="people_file")
     parser.add_argument(dest="infile")
-    parser.add_argument(dest="outfile")
     args = parser.parse_args()
 
     people = read_people(args.people_file)
@@ -67,7 +66,8 @@ def main():
             selected_pairs.append(pair)
             people.remove(pair[0])
             people.remove(pair[1])
-    output(args.outfile, already_paired, selected_pairs, people)
+    outfile = args.infile + ".RC"
+    output(outfile, already_paired, selected_pairs, people)
 
 
 main()
