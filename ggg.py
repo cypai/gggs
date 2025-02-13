@@ -4,6 +4,7 @@ import argparse
 import itertools
 import random
 import os
+import operator
 
 def read_people(file):
     with open(file, "r") as f:
@@ -21,7 +22,8 @@ def read_infile(file):
             if line == "---":
                 already_paired.append("-")
                 continue
-            already_paired.append(tuple(line.split(",")))
+            pair = tuple(line.split(","))
+            already_paired.append(pair)
     return already_paired
 
 def output(file, already_paired, selected, extra):
@@ -57,8 +59,9 @@ def main():
 
     people = read_people(args.people_file)
     already_paired = read_infile(args.infile)
+    deduped_already_paired = sorted([x for x in set(already_paired) if x != "-"], key=operator.itemgetter(0,1))
     pairs = itertools.combinations(people, 2)
-    good_pairs = [p for p in pairs if p not in already_paired]
+    good_pairs = [p for p in pairs if p not in deduped_already_paired and (p[1],p[0]) not in deduped_already_paired]
     random.shuffle(good_pairs)
     selected_pairs = []
     for pair in good_pairs:
